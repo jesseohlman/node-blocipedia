@@ -26,6 +26,6 @@
     "dialect": "postgres",
     "logging": false,
     "operatorsAliases": false,
-    "db": "process.env.https://jesseohlman-node-blocipedia.herokuapp.com/"
+    "db": "process.env.DATABASE_URL"
   }
 }
