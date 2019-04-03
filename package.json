@@ -24,6 +24,7 @@
     "express-flash": "0.0.2",
     "http": "0.0.0",
     "jasmine": "^3.3.1",
+    "pg": "^7.9.0",
     "sequelize": "^5.2.11",
     "sequelize-cli": "^5.4.0"
   }
