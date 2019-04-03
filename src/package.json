@@ -2,7 +2,7 @@
   "name": "src",
   "version": "1.0.0",
   "description": "wiki like site",
-  "main": "server.js",
+  "main": "\u001b[D\u001bsrc/server.js)",
   "scripts": {
     "test": "set NODE_ENV=test&& jasmine",
     "start": "nodemon src/server.js"
