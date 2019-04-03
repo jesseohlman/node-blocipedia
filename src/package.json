@@ -1,0 +1,29 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "wiki like site",
+  "main": "server.js",
+  "scripts": {
+    "test": "set NODE_ENV=test&& jasmine",
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesseohlman/node-blocipedia.git"
+  },
+  "author": "Jesse Ohlman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jesseohlman/node-blocipedia/issues"
+  },
+  "homepage": "https://github.com/jesseohlman/node-blocipedia#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-flash": "0.0.2",
+    "http": "0.0.0",
+    "jasmine": "^3.3.1",
+    "sequelize": "^5.2.11"
+  }
+}
