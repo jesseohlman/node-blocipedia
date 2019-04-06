@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const staticController = ("../controllers/staticController");
+const staticController = require("../controllers/staticController");
 
 router.get('/', staticController.index);
 

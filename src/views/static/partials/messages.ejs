@@ -1,0 +1,30 @@
+<div>
+    <div>
+        <% if(messages.error) { %>
+            <ul>
+                <div>Validation error: <% messages.error.forEach((error) => { %>
+                <li>
+                    <%= error.msg %>
+                </li>
+            <% }) %>
+                </div>
+            </ul>
+            <% } %>
+            
+    </div>
+
+    <div>
+            <% if(messages.notice) { %>
+                <ul>
+                    <div>Notice: <% messages.notice.forEach((notice) => { %>
+                    <li>
+                        <%= notice %>
+                    </li>
+                <% }) %>
+                    </div>
+                </ul>
+                <% } %>
+                
+        </div>
+
+</div>

@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html>
-    <header>
-
-    </header>
-    <main>
-            <div>up and running</div>
-    </main>
+<html lang="en">
+  <head>
+    <% include ./partials/head.ejs %>
+  </head>
+  <body>
     
+      <!-- Navigation -->
+<% include ./partials/navbar.ejs %>
+<a class="btn btn-primary" href="/users/signup">Sign up</a>
+
+      <!-- Page Content -->
+      <main class="container">
+          <!-- Jumbotron Header -->
+        <header class="jumbotron">
+            <h1>Welcome to Blocipedia</h1>
+            <p>share your wikis with other users!</p>
+        </header>
+        <!-- Page Features -->
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">About Bolcipedia</div>
+                <div class="panel-body">Colaborate with other users to make share the information that you're
+                    informed about!
+                </div>
+            </div>
+        </div>
+        
+
+      </main>
+
+     <% include ./partials/baseScripts.ejs %>
+    </body>
 </html>
