@@ -1,9 +1,15 @@
 <div>
     <div>
+
+
         <% if(messages.error) { %>
             <ul>
                 <div>Validation error: <% messages.error.forEach((error) => { %>
                 <li>
+                    <% if(!error.msg){ %>
+                        <%= error %>
+                    <% } %>
+                    
                     <%= error.msg %>
                 </li>
             <% }) %>

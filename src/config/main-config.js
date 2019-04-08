@@ -6,6 +6,7 @@ const expressValidator = require("express-validator");
 const viewsFolder = path.join(__dirname, "..", "views");
 const session = require("express-session");
 const flash = require("express-flash");
+const passportConfig = require("./passport");
 
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
             saveUninitialized: false,
             cookie: {maxAge: 1.21e+9}
         }));
+        passportConfig.init(app);
         app.use(flash());
         app.use((req, res, next) => {
             res.locals.currentUser = req.user;       

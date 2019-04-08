@@ -1,1 +1,10 @@
-<div>navbar here</div>
+<div>navbar here
+
+    <div>
+        <% if(!currentUser) { %>
+            <a class="btn btn-primary" href="/users/signin">Sign in</a>
+        <% } else {%>
+            <a class="btn btn-primary" href="/users/signout">Sign out</a>
+        <% } %>
+    </div>
+</div>

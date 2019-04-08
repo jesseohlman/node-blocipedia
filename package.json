@@ -34,6 +34,8 @@
     "express-validator": "^5.3.1",
     "http": "0.0.0",
     "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.9.0",
     "sequelize": "^5.2.11",
     "sequelize-cli": "^5.4.0"

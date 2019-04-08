@@ -1,6 +1,7 @@
 const userQueries = require("../db/users.queries.js");
 const sgMail = require('@sendgrid/mail');
 const User = require("../db/models").User;
+const passport = require("passport");
 
 module.exports = {
     create(req, res, next){
@@ -37,5 +38,29 @@ module.exports = {
 
     signup(req, res, next){
         res.render("users/signup");
+    },
+
+    signinForm(req, res, next){
+        res.render("users/signin");
+    },
+
+    signin(req, res, next){
+
+        passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/signin', failureFlash: true })(req, res);
+        /*passport.authenticate('local')(req, res, function(){
+            if(req.user){
+                req.flash("notice", "You have successfully signed in!");
+                res.redirect("/");
+            } else {
+                req.flash("notice", "You've failed to signed in, please try again.");
+                res.redirect(req.headers.referer);
+            }
+        });*/
+    },
+
+    signout(req, res, next){
+        req.logout();
+        req.flash("notice", "You've successfully signed out!");
+        res.redirect("/");
     }
 }

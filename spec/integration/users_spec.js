@@ -84,6 +84,46 @@ describe("routes : users", () => {
             })
         });
 
+        describe("GET /users/signin", () => {
+            it("should render a view with the sign in form", (done) => {
+                request.get(`${base}users/signin`, (err, res, body) => {
+                    expect(body).toContain("Sign in");
+                    expect(body).toContain("email");
+                    done();
+                })
+            });
+        });
+
+        describe("POST /users/sign", () => {
+            it("should sign a user in if they have an account", (done) => {
+
+                const options = {
+                    url : `${base}users/sign`,
+                    form: {
+                        email: "bool@gmail.com",
+                        password: "1234567890"
+                    }
+                }
+                request.post(options, (err, res, body) => {
+                    expect(body.currentUser).not.toBeNull();
+                    done();
+                })
+            });
+
+            it("should flash a message if the provided info is incorrect", (done) => {
+                const options = {
+                    url : `${base}users/sign`,
+                    form: {
+                        email: "bool@gmail.com",
+                        password: "wrong password"
+                    }
+                }
+                request.post(options, (err, res, body) => {
+                    expect(body.currentUser).toBeUndefined();
+                    done();
+                })
+            })
+        })
 
     })
 })
