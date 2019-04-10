@@ -17,10 +17,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "member"
+    },
+    wikiId: {
+      type: DataTypes.INTEGER
     }
   }, {});
   User.associate = function(models) {
     // associations can be defined here
+    User.hasMany(models.Wiki, {
+      foreignKey: "userId",
+      as: "wikis"
+    })
   };
   return User;
 };

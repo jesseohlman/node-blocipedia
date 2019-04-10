@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <% include ../static/partials/head.ejs %>
+    </head>
+
+    <body>
+        <% include ../static/partials/navbar.ejs %>
+
+        <main class="container">
+            <% if(wiki) { %>
+                <h1><%= wiki.title %></h1>
+
+                <div>
+                    <%= wiki.body %>
+                </div>
+
+            <% } %>
+<!--
+            <% if(wiki.userId === currentUser.id){ %>
+                <a href="/wiki/<%= wiki.id %>/update" >update</a>
+                <a href="/wiki/<%= wiki.id %>/delet" >delete</a>
+
+            }-->
+        </main>
+    </body>
+    
+    <% include ../static/partials/baseScripts.ejs %>
+</html>
