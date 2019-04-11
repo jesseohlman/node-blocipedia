@@ -15,12 +15,16 @@
                 </div>
 
             <% } %>
-<!--
-            <% if(wiki.userId === currentUser.id){ %>
-                <a href="/wiki/<%= wiki.id %>/update" >update</a>
-                <a href="/wiki/<%= wiki.id %>/delet" >delete</a>
 
-            }-->
+            <% if(currentUser){ %>
+                <a href="/wikis/new" class="btn btn-warning">New Wiki</a>
+                <% if(currentUser.role === "admin" || (currentUser.id === wiki.id)){ %>
+                <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
+                <form action="/wikis/<%= wiki.id %>/destroy" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <% } %>
+            <% } %>
         </main>
     </body>
     

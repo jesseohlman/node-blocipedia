@@ -2,6 +2,7 @@ const wikiQueries = require("../db/wiki.queries");
 
 module.exports = {
     index(req, res, next){
+        console.log("index query log");
         wikiQueries.getAllWikis((err, wikis) => {
             if(err || !wikis){
                 res.redirect(404, "/");
@@ -12,8 +13,8 @@ module.exports = {
         
     },
 
-    neww(req, res, next){
-        console.log("what");
+    new(req, res, next){
+        console.log("new query log");
         res.render("wikis/new");
     },
 
@@ -30,6 +31,8 @@ module.exports = {
     },
 
     show(req, res, next){
+        console.log("show query log");
+
         wikiQueries.getWiki(req.params.id, (err, wiki) => {
             if(!wiki || err){
                 res.redirect(404, "/");
@@ -43,11 +46,41 @@ module.exports = {
 
     },
 
-    delete(req, res, next){
+    edit(req, res, next){
+        console.log("edit query log");
 
+        wikiQueries.getWiki(req, (err, wiki) => {
+            if(err){
+                req.flash("error", err);
+                res.redirect(req.headers.referer);
+            } else {
+                res.render("wikis/edit", {wiki});
+            }
+        })
+   
+    },
+
+    destroy(req, res, next){
+        wikiQueries.delete(req, (err, wiki) => {
+            if(err){
+                req.flash("error", err);
+                res.redirect(req.headers.referer);
+            } else {
+                req.flash("notice", "You have successfully deleted your wiki.");
+                res.redirect("/wikis");
+            }
+        })
     },
 
     update(req, res, next){
-
+        wikiQueries.update(req, (err, wiki) => {
+            if(err){
+                req.flash("errors", err);
+                res.redirect(req.headers.referer);
+            } else {
+                req.flash("notice", "You have successfully updated the wiki!");
+                res.redirect("/wikis");
+            }
+        })
     }
 }

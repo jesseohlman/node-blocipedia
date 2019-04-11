@@ -1,12 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
+
 const wikiController = require("../controllers/wikiController");
 
-router.get("/wikis/:id", wikiController.show);
-router.get("/wikis/new", function(){console.log("this doesn't log")}, wikiController.neww);
+
+router.get("/wikis",  wikiController.index);
+router.get("/wikis/new", wikiController.new);
 router.post("/wikis/create", wikiController.create);
-router.get("/wikis", function(){console.log("this logs and loads forever")}, wikiController.index);
+router.get("/wikis/:id", wikiController.show);
+router.get("/wikis/:id/edit", wikiController.edit);
+router.post("wikis/:id/update", wikiController.update);
+router.post("wikis/:id/destroy", wikiController.destroy);
+
 
 
 

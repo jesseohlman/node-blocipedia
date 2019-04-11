@@ -2,19 +2,18 @@
 <html>
 <div>
 <main class="container">
-    <h1>New Wiki</h1>
-    <form method="post" action="/wikis/create">
+    <form method="post" action="/wikis/update">
         <div class="form-group">
             <label for="title">Title:</label>
-            <input class="form-control" type="text" name="title" placeholder="Your title here"/>
+            <input value="<%= wiki.title %>" class="form-control" type="text" name="title" placeholder="Your title here"/>
             <small>title must be at least 3 characters long</small>
         </div>
         <div>
             <label for="body">Body:</label>
-            <textarea class="form-control" rows="8" cols="75" name="body" placeholder="Your body text here"></textarea>
+            <textarea class="form-control" rows="8" cols="75" name="body" placeholder="Your body text here"><%= wiki.body %></textarea>
             <small>body must be at least 10 characters in length</small>
         </div>
-        <button type="submit"  class="btn btn-primary">submit</button>
+        <button type="submit"  class="btn btn-primary">Update</button>
     
     </form>
 </main>
