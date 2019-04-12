@@ -16,7 +16,7 @@ describe("routes:wikis", () => {
         sequelize.sync({force: true})
         .then(() => {
             User.create({
-                
+                name: "John Brock",
                 email: "bigboy@gmail.com",
                 password: "1234567890"
             })
