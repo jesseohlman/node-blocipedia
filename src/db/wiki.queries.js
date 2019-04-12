@@ -5,16 +5,18 @@ const Authorizer = require("../policies/wiki");
 module.exports = {
     createWiki(req, callback){
 
-        const authorized = new Authorizer(req.user).create();
-        
+        const authorized = true//new Authorizer(req.user).create();
         if(authorized){
+            console.log(`\n ${req.user} ${req.body.title} \n`);
+
             Wiki.create({
                 title: req.body.title,
-                body: req.body.description,
+                body: req.body.body,
                 userId: req.user.id
             })
             .then((wiki) => {
                 if(wiki){
+                    console.log(`\n ${wiki} \n`);
                     callback(null, wiki);
                 } 
             })
@@ -28,6 +30,7 @@ module.exports = {
     },
 
     getAllWikis(callback){
+
         Wiki.findAll()
         .then((wikis) => {
             if(wikis){
@@ -40,6 +43,7 @@ module.exports = {
     },
 
     getWiki(id, callback){
+
         Wiki.findOne({
             where: {id: id}
         })
@@ -56,11 +60,10 @@ module.exports = {
             where: {id: req.params.id}
         }).then((wiki) => {
 
-            const authorized = new Authorizer(req.user, wiki).destroy();
+            const authorized = true//new Authorizer(req.user, wiki).destroy();
             if(authorized){
-                Wiki.destroy({
-                    where: {id: req.params.id}
-                }).then((wiki) => {
+                wiki.destroy()
+                .then((wiki) => {
                     callback(null, wiki);
                 })
                 .catch((err) => {
@@ -77,7 +80,7 @@ module.exports = {
         Wiki.findOne({
             where: {id: req.params.id}
         }).then((wiki) => {
-            const authorized = new Authorizer(req.user, wiki).update();
+            const authorized = true //new Authorizer(req.user, wiki).update();
 
             if(authorized){
                 wiki.update({

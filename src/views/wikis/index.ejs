@@ -8,12 +8,16 @@
 
         <main class="container">
             <h1>Wikis</h1>
+            <% if(currentUser){ %>
+                <a href="/wikis/new" class="btn btn-warning">New Wiki</a>
+            <% } %>
+            
             <% if(wikis) { %>
                 <ul>
                     <% wikis.forEach((wiki) => { %>
                         <li>
                             <a href="/wikis/<%= wiki.id %>">
-                            <h2><%= wiki.title</h2><br>
+                            <h2><%= wiki.title %></h2><br>
                             </a>
                         </li>
                     <% }) %>
