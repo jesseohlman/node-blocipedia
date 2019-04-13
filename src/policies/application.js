@@ -25,7 +25,7 @@ module.exports = class ApplicationPolicy {
     }
 
     destroy() {
-        return this.record && (this._isAdmin() || this._isOwner());
+        return this.new() && this.record && (this._isAdmin() || this._isOwner());
     }
 
     edit() {

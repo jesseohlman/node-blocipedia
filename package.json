@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jesseohlman/node-blocipedia#readme",
   "devDependencies": {
     "jasmine": "^3.3.1",
+    "faker": "^4.1.0",
     "request": "^2.88.0"
   },
   "dependencies": {

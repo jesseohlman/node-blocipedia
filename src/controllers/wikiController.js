@@ -69,7 +69,7 @@ module.exports = {
     },
 
     update(req, res, next){
-        wikiQueries.update(req, (err, wiki) => {
+        wikiQueries.update( req, (err, wiki) => {
             if(err){
                 req.flash("errors", err);
                 res.redirect(req.headers.referer);

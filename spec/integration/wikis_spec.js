@@ -2,6 +2,7 @@ const request = require("request");
 const sequelize = require("../../src/db/models/index").sequelize;
 const server = require("../../src/server");
 
+
 const base = "http://localhost:3000"
 const User = require("../../src/db/models").User;
 const Wiki = require("../../src/db/models").Wiki;
@@ -16,13 +17,13 @@ describe("routes:wikis", () => {
         sequelize.sync({force: true})
         .then(() => {
             User.create({
-                name: "John Brock",
-                email: "bigboy@gmail.com",
-                password: "1234567890"
-            })
-            .then((user) =>{
-                this.user = user;
-
+                    name: "John Brock",
+                    email: "bigboy@gmail.com",
+                    password: "1234567890"
+                })
+                .then((user) =>{
+                    this.user = user;
+                    
                 Wiki.create({
                     title: "House",
                     body: "wub wub wub wub",
@@ -30,11 +31,26 @@ describe("routes:wikis", () => {
                 })
                 .then((wiki) => {
                     this.wiki = wiki;
-                    done();
-                })
-            })
-        })
-    })
+
+                    request.get({           
+                        url: "http://localhost:3000/auth/fake",
+                        form: {
+                          role: "member",     
+                          userId: this.user.id,
+                          email: "bigboy@gmail.com",
+                          name: "John Brock"
+                        }
+                      },
+                        (err, res, body) => {
+                          done();
+                        }
+                      );
+                    });
+                });
+        
+        });
+    });
+
 
     describe("GET /wikis", () => {
         it("should display a all the wiki's titles", (done) => {
@@ -114,6 +130,7 @@ describe("routes:wikis", () => {
                     id: this.wiki.id
                 }})
                 .then((wiki) => {
+                    expect(wiki).not.toBeNull();
                     expect(wiki.title).toBe("new title");
                     done();
                 })
