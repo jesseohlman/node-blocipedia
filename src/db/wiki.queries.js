@@ -66,7 +66,6 @@ module.exports = {
                     callback(err);
                 })
         } else {
-            console.log("authorize failed \n \n")
             req.flash("notice", "You are not authorized to do that.");
             callback("Forbidden");
         }

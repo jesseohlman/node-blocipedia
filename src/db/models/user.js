@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "member"
+      defaultValue: "standard"
     },
     wikiId: {
       type: DataTypes.INTEGER

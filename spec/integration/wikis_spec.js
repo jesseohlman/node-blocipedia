@@ -31,20 +31,7 @@ describe("routes:wikis", () => {
                 })
                 .then((wiki) => {
                     this.wiki = wiki;
-
-                    request.get({           
-                        url: "http://localhost:3000/auth/fake",
-                        form: {
-                          role: "member",     
-                          userId: this.user.id,
-                          email: "bigboy@gmail.com",
-                          name: "John Brock"
-                        }
-                      },
-                        (err, res, body) => {
-                          done();
-                        }
-                      );
+                    done();
                     });
                 });
         
@@ -92,65 +79,161 @@ describe("routes:wikis", () => {
         })
     });
 
-    describe("POST /wikis/create", () => {
-        it("should create a new post", (done) => {
-            const options = {
-                url: `${base}/wikis/create`,
+
+
+    describe("Owner performing CRUD actions on their wikis", () => {
+       
+        beforeEach((done) => {
+            request.get({           
+                url: "http://localhost:3000/auth/fake",
                 form: {
-                    title: "New wiki",
-                    body: "Wiki body"
+                  role: "standard",     
+                  userId: this.user.id,
                 }
-            };
-
-            request.post(options, (err, res, body) => {
-                Wiki.findOne({ where: { title: "New wiki"}})
-                .then((wiki) => {
-                    expect(wiki.title).toBe("New wiki");
-                    expect(wiki.body).toBe("Wiki body");
-                    done();
-                })
-            })
-        })
-    });
-
-    describe("POST /wikis/:id/update", () => {
-        it("should update the wiki with the given values", (done) => {
-            const options = {
-                url: `${base}/wikis/${this.wiki.id}/update`,
-                form: {
-                    title: "new title",
-                    body: "new body"
+              },
+                (err, res, body) => {
+                  done();
                 }
-            };
+              );
+        });
 
-            request.post(options, (err, res, body) => {
-                expect(err).toBeNull();
-               
-                Wiki.findOne({where: {
-                    id: this.wiki.id
-                }})
-                .then((wiki) => {
-                    expect(wiki).not.toBeNull();
-                    expect(wiki.title).toBe("new title");
-                    done();
+        describe("POST /wikis/create", () => {
+            it("should create a new post", (done) => {
+                const options = {
+                    url: `${base}/wikis/create`,
+                    form: {
+                        title: "New wiki",
+                        body: "Wiki body"
+                    }
+                };
+    
+                request.post(options, (err, res, body) => {
+                    Wiki.findOne({ where: { title: "New wiki"}})
+                    .then((wiki) => {
+                        expect(wiki.title).toBe("New wiki");
+                        expect(wiki.body).toBe("Wiki body");
+                        done();
+                    })
                 })
             })
         });
-    });
-
-    describe("POST /wikis/:id/destroy", () => {
-        it("should delete the given post", (done) => {
-            request.post(`${base}/wikis/${this.wiki.id}/destroy`, (err, res, body) => {
-                expect(err).toBeNull();
-
-                Wiki.findOne(( {where: {id: this.wiki.id}}))
-                .then((wiki) => {
-                    expect(wiki).toBeNull();
+        
+        
+        describe("GET /wikis/:id/edit", () => {
+            it("should show the wiki infomration and the user should be able to edit it", (done) => {
+                request.get(`${base}/wikis/${this.wiki.id}/edit`, (err, res, body) => {
+                    expect(body).toContain("House");
+                    expect(body).toContain("wub wub wub wub");
+                    expect(body).toContain("Update");
                     done();
+    
                 })
             })
         });
-    });
+    
+    
+        describe("POST /wikis/:id/update", () => {
+            it("should update the wiki with the given values", (done) => {
+                const options = {
+                    url: `${base}/wikis/${this.wiki.id}/update`,
+                    form: {
+                        title: "new title",
+                        body: "new body"
+                    }
+                };
+    
+                request.post(options, (err, res, body) => {
+                    expect(err).toBeNull();
+                   
+                    Wiki.findOne({where: {
+                        id: this.wiki.id
+                    }})
+                    .then((wiki) => {
+                        expect(wiki).not.toBeNull();
+                        expect(wiki.title).toBe("new title");
+                        done();
+                    })
+                })
+            });
+        });
+    
+        describe("POST /wikis/:id/destroy", () => {
+            it("should delete the given post", (done) => {
+                request.post(`${base}/wikis/${this.wiki.id}/destroy`, (err, res, body) => {
+                    expect(err).toBeNull();
+    
+                    Wiki.findOne(( {where: {id: this.wiki.id}}))
+                    .then((wiki) => {
+                        expect(wiki).toBeNull();
+                        done();
+                    })
+                })
+            });
+        });
 
+    }); //end owner tests
 
+    describe("user performing CRUD on other users' wikis", () => {
+        beforeEach((done) => {
+            User.create({
+                name: "andy",
+                email: "taco@gmail.com",
+                password: "1234567890"
+            }).then((user) => {
+                this.user = user;
+                request.get({           
+                    url: "http://localhost:3000/auth/fake",
+                    form: {
+                      role: "standard",     
+                      userId: this.user.id,
+                    }
+                  },
+                    (err, res, body) => {
+                      done();
+                    }
+                  );
+            })
+        });
+    
+    
+        describe("POST /wikis/:id/update", () => {
+            it("should not update the wiki with the given values", (done) => {
+                const options = {
+                    url: `${base}/wikis/${this.wiki.id}/update`,
+                    form: {
+                        title: "new title",
+                        body: "new body"
+                    }
+                };
+    
+                request.post(options, (err, res, body) => {
+                    expect(err).toBeNull();
+                   
+                    Wiki.findOne({where: {
+                        id: this.wiki.id
+                    }})
+                    .then((wiki) => {
+                        expect(wiki).not.toBeNull();
+                        expect(wiki.title).toBe("House");
+                        done();
+                    })
+                })
+            });
+        });
+    
+        describe("POST /wikis/:id/destroy", () => {
+            it("should not delete the given post", (done) => {
+                request.post(`${base}/wikis/${this.wiki.id}/destroy`, (err, res, body) => {
+                    expect(err).toBeNull();
+    
+                    Wiki.findOne(( {where: {id: this.wiki.id}}))
+                    .then((wiki) => {
+                        expect(wiki).not.toBeNull();
+                        done();
+                    })
+                })
+            });
+        });
+
+    }); //end foreigner tests
 })
