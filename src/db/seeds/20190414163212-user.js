@@ -1,14 +1,14 @@
 'use strict';
-const User = require("../models").User;
+
 const faker = require("faker");
 
-let wikis = [];
+let users = [];
 
 for(let i = 0; i <= 15; i++){
-  wikis.push({
-    title: faker.hacker.noun(),
-    body: faker.hacker.phrase(),
-    userId: i + 1,
+  users.push({
+    name: faker.name.findName(),
+    email: faker.internet.email(),
+    password: "1234567890",
     createdAt: new Date(),
     updatedAt: new Date()
   });
@@ -26,7 +26,8 @@ module.exports = {
         isBetaMember: false
       }], {});
     */
-   return queryInterface.bulkInsert("Wikis", wikis, {});
+
+    return queryInterface.bulkInsert('Users', users, {});
   },
 
   down: (queryInterface, Sequelize) => {
@@ -37,7 +38,6 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-   return queryInterface.bulkDelete("Wikis", null, {});
-
+   return queryInterface.bulkDelete('Users', null, {});
   }
 };
