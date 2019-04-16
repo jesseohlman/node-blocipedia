@@ -80,12 +80,10 @@ module.exports = {
 
     upgrade(req, res, next){
 
-        const token = request.body.stripeToken; // Using Express
-
-
+        const token = req.body.stripeToken;
         const chargeAmount = req.body.chargeAmount;
         
-        try {
+
         const charge = stripe.charges.create({
             amount: chargeAmount,
             currency: 'usd',
@@ -106,13 +104,8 @@ module.exports = {
                 })
             }
         });
-    } catch(err) {
-        req.flash("error", err);
-        console.log(err);
         res.redirect("/");
-
-    }
-        res.redirect("/");
+        
         
     },
 
