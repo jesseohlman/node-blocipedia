@@ -91,15 +91,14 @@ module.exports = {
             source: token,
         }, function(err, charge) {
             if(err && err.type === "StripeCardError"){
-                console.log("You're card has been declined.");
+                req.flash("error", "You're card has been declined.");
             } else {
                 User.findOne({where: {id: req.user.id}})
                 .then((user) => {
                     user.update({
                         role: "premium"
                     }).then((user) => {
-                        console.log(`\nuser role is now ${user.role}\n`);
-                        
+                        req.flash("notice", "You are now a premium member!");                        
                     })
                 })
             }
