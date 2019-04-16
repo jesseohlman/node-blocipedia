@@ -2,6 +2,9 @@ const userQueries = require("../db/users.queries.js");
 const sgMail = require('@sendgrid/mail');
 const User = require("../db/models").User;
 const passport = require("passport");
+var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+
+
 
 module.exports = {
     create(req, res, next){
@@ -66,5 +69,72 @@ module.exports = {
         res.redirect("/");
     },
 
+    premium(req, res, next){
+        if(req.user){
+            res.render("users/upgrade");
+        }else {
+            req.flash("error", "you must be signed in to upgrade your account");
+            res.redirect("/users/signin");
+        }
+    },
+
+ /*   upgrade(req, res, next){
+        const token = req.body.stripeToken; // Using Express
+        const chargeAmount = req.body.chargeAmount;
+        
+        
+        const charge = stripe.charges.create({
+            amount: chargeAmount,
+            currency: 'usd',
+            description: 'Upgrade to premium',
+            source: token,
+        }, function(err, charge) {
+            if(err && err.type === "StripeCardError"){
+                console.log("You're card has been declined.");
+            } else {
+                User.findOne({where: {id: req.user.id}})
+                .then((user) => {
+                    user.update({
+                        role: "premium"
+                    }).then((user) => {
+                        console.log(`\nuser role is now ${user.role}\n`);
+                        
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    res.redirect("back");
+                })
+            }
+        });
+        res.redirect("/");
+        
+    },
+
+    downgrade(req, res, next){
+        User.findOne({where: {id: req.user.id}})
+        .then((user) => {
+            user.update({
+                role: "member"
+            }).then((user) => {
+                if(user.role = "member"){
+                    req.flash("notice", "You have downgraded to a member");
+                    res.redirect("/");
+                } else {
+                    req.flsh("error", "Something went wrong");
+                    res.redirect("/");
+                }
+            });
+        });
+    },
+
+    member(req, res, next){
+        if(req.user.role == "premium"){
+            res.render("users/downgrade");
+        } else {
+            req.flash("error", "You cannot downgrade your account if you aren't a premium member.");
+            res.redirect("/");
+        }
+    } */
 
 }

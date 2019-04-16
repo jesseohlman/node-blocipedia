@@ -7,10 +7,13 @@ const viewsFolder = path.join(__dirname, "..", "views");
 const session = require("express-session");
 const flash = require("express-flash");
 const passportConfig = require("./passport");
+//const stripe = require('stripe')("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+//const customer = await stripe.customers.create({email: 'customer@example.com'});
 
 
 module.exports = {
     init(app, express){
+
         app.use(logger('dev'));
         app.use(expressValidator());
         app.use(bodyParser.urlencoded({extended: true }));

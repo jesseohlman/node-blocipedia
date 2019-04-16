@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include ../static/partials/navbar.ejs %>
+    </head>
+
+<main>
+    <div>
+        <h1>Would you like to downgrade your account?</h1>
+    </div>
+
+    <% if(currentUser && currentUser.role === "premium") { %>
+        <form action="/users/downgrade" method="post">
+            <input type="submit" class="btn btn-danger" value="Yes"/>
+        </form>
+        <a href="/" class="btn btn-primary">No</a>
+    <% } else { %>
+        <h1>You cannot downgrade your account if you are not a premium member</h1>
+    <% } %>
+
+</main>
+<% include ../static/partials/baseScripts.ejs %>
+  </html>

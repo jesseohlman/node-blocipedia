@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include ../static/partials/navbar.ejs %>
+    </head>
+
+<main>
+    <div>
+        <h1>Upgrade to premium today!</h1>
+        <section>
+            <p>Would you like to create private wikis that only you and your associates can see?</p>
+            <p>Then upgrade to premium for only 15$</p>
+        </section>
+    </div>
+
+    <% if(currentUser && currentUser.role !== "premium") { %>
+    <form action="/users/upgrade" method="POST">
+        <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="pk_test_TYooMQauvdEDq54NiTphI7jx"
+        data-amount="1500"
+        data-name="Stripe.com"
+        data-description="Upgrade to premium"
+        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+        data-locale="auto"
+        data-zip-code="true">
+        </script>
+        <input type="hidden" name="chargeAmount" value="1500"/>
+    </form>
+    <% } else { %>
+        <h1>You are already a premium member!</h1>
+    <% } %>
+
+</main>
+<% include ../static/partials/baseScripts.ejs %>
+  </html>
