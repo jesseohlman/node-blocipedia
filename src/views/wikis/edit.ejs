@@ -15,6 +15,7 @@
             <label for="body">Body:</label>
             <textarea class="form-control" rows="8" cols="75" name="body" placeholder="Your body text here"><%= wiki.body %></textarea>
             <small>body must be at least 10 characters in length</small>
+            <% include ../static/partials/markdownGuide.ejs %>
         </div>
         <% if(currentUser.role === "admin" || currentUser.role === "premium") { %>
             <label for="private">Make this wiki private?</label>

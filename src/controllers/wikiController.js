@@ -1,5 +1,7 @@
 const wikiQueries = require("../db/wiki.queries");
 const Authorizer = require("../policies/wiki");
+const helpers = require("../auth/helpers");
+
 
 module.exports = {
     index(req, res, next){
@@ -58,7 +60,8 @@ module.exports = {
             if(!wiki || err){
                 res.redirect(404, "/");
             } else {
-                res.render("wikis/show", {wiki});
+                const body = helpers.markdownUpdate(wiki.body);
+                res.render("wikis/show", {wiki, body});
 
             }
         })
@@ -69,7 +72,7 @@ module.exports = {
 
     edit(req, res, next){
 
-        wikiQueries.getWiki(req.params.id, (err, wiki) => {
+        wikiQueries.getWiki(req, (err, wiki) => {
             if(err){
                 req.flash("error", err);
                 res.redirect(req.headers.referer);

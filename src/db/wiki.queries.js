@@ -2,6 +2,9 @@ const Wiki = require("../db/models").Wiki;
 const Authorizer = require("../policies/wiki");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
+const markdown = require("markdown").markdown;
+const helpers = require("../auth/helpers");
+
 
 
 
@@ -70,7 +73,7 @@ module.exports = {
         })
     },
 
-    getWiki(req, callback){
+    getWiki( req, callback){
 
         Wiki.findOne({
             where: {id: req.params.id}
