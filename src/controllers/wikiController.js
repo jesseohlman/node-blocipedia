@@ -1,7 +1,12 @@
 const wikiQueries = require("../db/wiki.queries");
+const Authorizer = require("../policies/wiki");
 
 module.exports = {
     index(req, res, next){
+        const admin = new Authorizer(req.user)._isAdmin();
+        const premium = new Authorizer(req.user)._isPremium();
+
+        if(admin){
         wikiQueries.getAllWikis((err, wikis) => {
             if(err || !wikis){
                 res.redirect(404, "/");
@@ -9,6 +14,25 @@ module.exports = {
                 res.render("wikis/index", {wikis});
             }
         })
+    } else if(premium){
+        wikiQueries.getUserPremiumWikis(req, (err, wikis) => {
+            if(err || !wikis){
+                res.redirect(404, "/");
+                console.log(err);
+
+            }else{
+                res.render("wikis/index", {wikis});
+            }
+        })
+    } else {
+        wikiQueries.getPublicWikis((err, wikis) => {
+            if(err || !wikis){
+                res.redirect(404, "/");
+            }else{
+                res.render("wikis/index", {wikis});
+            }
+        })
+    }
         
     },
 
@@ -30,7 +54,7 @@ module.exports = {
 
     show(req, res, next){
 
-        wikiQueries.getWiki(req.params.id, (err, wiki) => {
+        wikiQueries.getWiki(req, (err, wiki) => {
             if(!wiki || err){
                 res.redirect(404, "/");
             } else {

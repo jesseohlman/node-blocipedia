@@ -11,13 +11,21 @@
 
     <% if(currentUser && currentUser.role === "premium") { %>
         <form action="/users/downgrade" method="post">
-            <input type="submit" class="btn btn-danger" value="Yes"/>
+            <div class="popup" onClick="myFunction()">
+                <input type="submit" class="btn btn-danger" value="Yes"/>
+            </div>
         </form>
+
         <a href="/" class="btn btn-primary">No</a>
     <% } else { %>
         <h1>You cannot downgrade your account if you are not a premium member</h1>
     <% } %>
 
 </main>
+<script>
+        function myFunction() {
+            confirm("Are you sure you want to downgrade? \nAll of your private wikis will become public.");
+        }
+        </script>
 <% include ../static/partials/baseScripts.ejs %>
   </html>

@@ -7,6 +7,10 @@
         <% include ../static/partials/navbar.ejs %>
 
         <main class="container">
+            <% if(wiki.private) { %>
+                <div>This is a private wiki</div>
+            <% } %>
+
             <% if(wiki) { %>
                 <h1><%= wiki.title %></h1>
 

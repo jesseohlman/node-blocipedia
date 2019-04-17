@@ -3,6 +3,7 @@ const sgMail = require('@sendgrid/mail');
 const User = require("../db/models").User;
 const passport = require("passport");
 var stripe = require("stripe")("sk_test_4eC39HqLyjWDarjtT1zdp7dc");
+const wikiQueries = require("../db/wiki.queries.js");
 
 
 
@@ -114,13 +115,19 @@ module.exports = {
             user.update({
                 role: "member"
             }).then((user) => {
-                if(user.role = "member"){
-                    req.flash("notice", "You have downgraded to a member");
-                    res.redirect("/");
-                } else {
-                    req.flsh("error", "Something went wrong");
-                    res.redirect("/");
-                }
+                wikiQueries.convertPrivates(req, (err, wikis) => {
+                        if(err){
+                            req.flash("error", err);
+                            res.redirect("/");
+                        }
+                    if(user.role = "member"){
+                        req.flash("notice", "You have downgraded to a member, and your private posts are now public.");
+                        res.redirect("/");
+                    } else {
+                        req.flsh("error", "Something went wrong");
+                        res.redirect("/");
+                    }
+                });
             });
         });
     },

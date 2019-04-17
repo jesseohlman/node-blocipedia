@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <% include ../static/partials/navbar.ejs %>
+    </head>
 <div>
 <main class="container">
     <form method="post" action="/wikis/<%= wiki.id %>/update">
@@ -13,9 +16,21 @@
             <textarea class="form-control" rows="8" cols="75" name="body" placeholder="Your body text here"><%= wiki.body %></textarea>
             <small>body must be at least 10 characters in length</small>
         </div>
+        <% if(currentUser.role === "admin" || currentUser.role === "premium") { %>
+            <label for="private">Make this wiki private?</label>
+            <div class="popup" onClick="myFunction()">
+                <input class="popup" type="checkbox" name="private" value="true"/><br>
+            </div>
+        <% } %>
         <button type="submit"  class="btn btn-primary">Update</button>
     
     </form>
 </main>
 </div>
+<script>
+    function myFunction() {
+        confirm("Are you sure you want to make this wiki private? \nOnly you, and those you specify, may view it.");
+    }
+</script>
+<% include ../static/partials/baseScripts.ejs %>
 </html>
