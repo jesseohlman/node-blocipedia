@@ -1,32 +1,59 @@
 const wikiQueries = require("../db/wiki.queries");
 const Authorizer = require("../policies/wiki");
 const helpers = require("../auth/helpers");
+const User = require("../db/models").User;
+const Collaborator = require("../db/models").Collaborator;
 
 
 module.exports = {
     index(req, res, next){
         const admin = new Authorizer(req.user)._isAdmin();
         const premium = new Authorizer(req.user)._isPremium();
-
-        if(admin){
-        wikiQueries.getAllWikis((err, wikis) => {
-            if(err || !wikis){
-                res.redirect(404, "/");
-            }else{
-                res.render("wikis/index", {wikis});
+       
+        if(req.user){
+            User.findOne({include: {
+                model: Collaborator,
+                as: "collaborators",
+                through: { attributes: []}
+            }, 
+            where: {id: req.user.id}})
+            .then((user) => {
+            console.log(`\n${user.email}  ${user.isCollaborator()}\n`);
+            
+                if(user.isCollaborator()){
+                    wikiQueries.getCollabWikis(user, (err, wikis) => {
+                        if(err || !wikis){
+                            res.redirect(404, "/");
+                        } else {
+                            console.log("\n render collab index \n")
+                            res.render("wikis/index", {wikis});
+                        }
+                    })
+                } else {
+                    if(admin){
+                        wikiQueries.getAllWikis((err, wikis) => {
+                            if(err || !wikis){
+                                res.redirect(404, "/");
+                            }else{
+                                res.render("wikis/index", {wikis});
+                            }
+                        })
+                    } else if(premium){
+                        wikiQueries.getUserPremiumWikis(req, (err, wikis) => {
+                            if(err || !wikis){
+                                res.redirect(404, "/");
+                            }else{
+                                res.render("wikis/index", {wikis});
+                            }
+                        })
+                }
+                   
             }
-        })
-    } else if(premium){
-        wikiQueries.getUserPremiumWikis(req, (err, wikis) => {
-            if(err || !wikis){
-                res.redirect(404, "/");
-                console.log(err);
-
-            }else{
-                res.render("wikis/index", {wikis});
-            }
-        })
-    } else {
+            })
+            .catch((err) => {
+            console.log(err);
+            })
+    }else{
         wikiQueries.getPublicWikis((err, wikis) => {
             if(err || !wikis){
                 res.redirect(404, "/");
@@ -35,7 +62,6 @@ module.exports = {
             }
         })
     }
-        
     },
 
     new(req, res, next){

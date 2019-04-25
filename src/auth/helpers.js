@@ -1,5 +1,8 @@
 const bcrypt = require("bcryptjs");
 const md = require("markdown").markdown;
+const User = require("../db/models").User;
+const Collaborator = require("../db/models").Collaborator;
+
 
 module.exports = {
 
@@ -15,6 +18,33 @@ module.exports = {
     comparePass(userPassword, databasePassword) {
         return bcrypt.compareSync(userPassword, databasePassword);
     },
+
+    hasCollab(user){
+      var bool = false;
+
+      User.findOne({include: {
+          model: Collaborator,
+          as: "collaborators",
+          through: { attributes: []}
+      }, 
+      where: {id: user.id}})
+      .then((user) => {
+        console.log(`\n${user.email}  ${user.isCollaborator()}\n`);
+        
+          if(user.isCollaborator()){
+            console.log("the fuck")
+              bool = true;
+          } else {
+            console.log("cunt");
+              bool = false
+          }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      console.log(bool);
+      return bool;
+  },
 
     markdownUpdate(text){
     var text = text;

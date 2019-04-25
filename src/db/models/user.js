@@ -27,7 +27,19 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Wiki, {
       foreignKey: "userId",
       as: "wikis"
-    })
+    });
+
+    User.belongsToMany(models.Collaborator, {
+      through: "collabUsers",
+      foreignKey: "userId",
+      as: "collaborators"
+    });
+
+    User.prototype.isCollaborator = function(){
+      if(!this.collaborators) return false;
+
+      return true;
+    }
   };
   return User;
 };

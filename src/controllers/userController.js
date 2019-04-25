@@ -124,7 +124,7 @@ module.exports = {
                         req.flash("notice", "You have downgraded to a member, and your private posts are now public.");
                         res.redirect("/");
                     } else {
-                        req.flsh("error", "Something went wrong");
+                        req.flash("error", "Something went wrong");
                         res.redirect("/");
                     }
                 });

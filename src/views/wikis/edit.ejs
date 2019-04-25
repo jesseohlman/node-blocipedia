@@ -4,7 +4,19 @@
         <% include ../static/partials/navbar.ejs %>
     </head>
 <div>
+        <% include ../static/partials/messages.ejs %>
+
 <main class="container">
+    <% if(currentUser.role === "admin" || (currentUser.role === "premium" && (currentUser.id === wiki.userId))) { %>
+        <div>
+            <div>Add collaborators by email</div>
+            <form class="form-group" action="/wikis/<%= wiki.id %>/collaborators/new" method="post">
+                <input type="email" name="email" class="form-control" placeholder="collaborator@email.com"/>
+                <button type="submit" class="btn btn-primary">Add Collaborator</button>
+            </form>
+        </div>
+        <small><a href="/wikis/<%= wiki.id %>/collaborators">see current collaborators</a></small>
+    <% } %>
     <form method="post" action="/wikis/<%= wiki.id %>/update">
         <div class="form-group">
             <label for="title">Title:</label>

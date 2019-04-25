@@ -1,7 +1,11 @@
 const Wiki = require("../db/models").Wiki;
+const Collaborator = require("../db/models").Collaborator;
+const CollabUsers = require("../db/models").CollabUsers;
+const User = require("../db/models").User;
 const Authorizer = require("../policies/wiki");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
+const collabQueries = require("./collaborators.queries");
 const markdown = require("markdown").markdown;
 const helpers = require("../auth/helpers");
 
@@ -20,8 +24,20 @@ module.exports = {
                 private: req.body.private
             })
             .then((wiki) => {
+
                 if(wiki){
-                    callback(null, wiki);
+                    if(wiki.private === true){
+                        Collaborator.create({
+                            wikiId: wiki.id
+                        }).then((res) => {
+                            callback(null, wiki);
+                        })
+                        .catch((err) => {
+                            callback(err);
+                        })
+                    } else {
+                        callback(null, wiki);
+                    }
                 } 
             })
             .catch((err) => {
@@ -59,6 +75,47 @@ module.exports = {
         })
     },
 
+    getCollabWikis(user, callback){
+        console.log("in collab index");
+            Wiki.findAll()
+            .then((wikis) => {
+                console.log("wikis got");
+
+                var onlyCollabs = wikis.filter((wiki) => {
+                    console.log("in filter");
+
+                if(wiki.private === true){
+                    console.log("private true");
+                    collabQueries.findCollab(wiki.id, (err, collab) => {
+                        if(err){console.log(wiki.id)
+                            console.log(`\n\n\nSURELY THIS IS MY ERROR ${err} \n\n\n`)
+                           // console.log(err);
+                        } else {
+                            console.log("checking collab users");
+                            return collab.checkUser(user.id);
+                        }
+                    })
+                   /*Collaborator.findOne({include: {
+                        model: User,
+                        as: "users",
+                        through: { attributes: []}
+                    }, where: {wikiId: wiki.id}})
+                    .then((collab) => { console.log(`${collab.checkUser(user.id)}`)
+                        return collab.checkUser(user.id)});*/
+                } else {
+                    console.log("private false");
+
+                    return true;
+                }
+            });
+            callback(null, onlyCollabs);
+            })
+            .catch((err) => {
+                callback(err);
+            })
+
+    },
+
     getUserPremiumWikis(req, callback){
 
         Wiki.findAll({
@@ -87,12 +144,14 @@ module.exports = {
                     req.flash("notice", "You are not authorized to do that.");
                     callback("Forbidden");
                 }
-            }
+            } else {
             callback(null, wiki)
+            }
         })
         .catch((err) => {
             callback(err);
         })
+    
     },
 
     delete(req, callback){

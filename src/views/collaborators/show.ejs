@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <% include ../static/partials/head.ejs %>
+    </head>
+
+    <body>
+        <% include ../static/partials/navbar.ejs %>
+
+        <main class="container">
+            <h1>Collaborators</h1>
+            <% if(currentUser.role === "admin" || (currentUser.role === "premium")) { %>
+                <div>
+                    <div>Add collaborators by email</div>
+                    <form class="form-group" action="/wikis/<%= collab.wikiId %>/collaborators/new" method="post">
+                        <input type="email" name="email" class="form-control" placeholder="collaborator@email.com"/>
+                        <button type="submit" class="btn btn-primary">Add Collaborator</button>
+                    </form>
+                </div>
+            <% } %>
+            
+            <% if(collab) { %>
+                <ul>
+                    <% const users = collab.getUsers(); users.forEach((user) => { %>
+                        <li>
+                            <h3><%= user.name %></h3>
+                            <small>email: <%= user.email %></small>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <h2>No Collaborators found!</h2>
+            <% } %>
+        </main>
+    </body>
+    
+    <% include ../static/partials/baseScripts.ejs %>
+</html>

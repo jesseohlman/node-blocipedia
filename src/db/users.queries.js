@@ -1,4 +1,5 @@
 const User = require("../db/models").User;
+const Collaborator = require("../db/models").Collaborator;
 const bcrypt = require("bcryptjs");
 
 module.exports = {
@@ -16,5 +17,7 @@ module.exports = {
               callback(err);
           })
 
-    }
+    },
+
+    
 }

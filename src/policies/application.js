@@ -1,3 +1,6 @@
+const CollabUser = require("../db/models").CollabUser;
+
+
 module.exports = class ApplicationPolicy {
 
     constructor(user, record) {
@@ -5,8 +8,12 @@ module.exports = class ApplicationPolicy {
         this.record = record;
     }
 
+    _isCollaborator() {
+        return CollabUser.findOne
+    }
+
     _isOwner() {
-        return this.record && (this.record.userId == this.user.id);
+        return this.record && ((this.record.userId == this.user.id)   || Collaborator.checkUser(this.user.id));
     }
 
     _isAdmin() {
