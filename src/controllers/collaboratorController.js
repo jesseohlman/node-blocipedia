@@ -24,7 +24,7 @@ module.exports = {
                 res.redirect(`/wikis/${req.params.wikiId}/edit`);
             } else {
                 req.flash("notice", "You have succesfully added a new collaborator for this wiki!");
-                res.redirect(`/wikis/${req.params.wikiId}/collaborators/show`);
+                res.redirect(`/wikis/${req.params.wikiId}/collaborators`);
             }
         })
     }

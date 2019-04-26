@@ -1,6 +1,5 @@
 const Wiki = require("../db/models").Wiki;
 const Collaborator = require("../db/models").Collaborator;
-const CollabUsers = require("../db/models").CollabUsers;
 const User = require("../db/models").User;
 const Authorizer = require("../policies/wiki");
 const sequelize = require("sequelize");
@@ -62,12 +61,22 @@ module.exports = {
         })
     },
 
-    getPublicWikis(callback){
+    getPublicWikis(user, callback){
 
         Wiki.findAll({where: {[Op.not]:{private: true}}})
         .then((wikis) => {
-            if(wikis){
-                callback(null, wikis)
+            if(user){
+                Collaborator.findAll({where: {userId: user.id}})
+                .then((collabs) => {
+                   var wikiIds = collabs.map((collab) => {return collab.wikiId});
+                   Wiki.findAll({where: {id: wikiIds}})
+                   .then((collabWikis) => {
+                       const refinedWikis = collabWikis.concat(wikis);
+                       callback(null, refinedWikis)
+                   })
+                })
+            } else {
+                callback(null, wikis);
             }
         })
         .catch((err) => {
@@ -75,59 +84,35 @@ module.exports = {
         })
     },
 
-    getCollabWikis(user, callback){
-        console.log("in collab index");
-            Wiki.findAll()
-            .then((wikis) => {
-                console.log("wikis got");
-
-                var onlyCollabs = wikis.filter((wiki) => {
-                    console.log("in filter");
-
-                if(wiki.private === true){
-                    console.log("private true");
-                    collabQueries.findCollab(wiki.id, (err, collab) => {
-                        if(err){console.log(wiki.id)
-                            console.log(`\n\n\nSURELY THIS IS MY ERROR ${err} \n\n\n`)
-                           // console.log(err);
-                        } else {
-                            console.log("checking collab users");
-                            return collab.checkUser(user.id);
-                        }
-                    })
-                   /*Collaborator.findOne({include: {
-                        model: User,
-                        as: "users",
-                        through: { attributes: []}
-                    }, where: {wikiId: wiki.id}})
-                    .then((collab) => { console.log(`${collab.checkUser(user.id)}`)
-                        return collab.checkUser(user.id)});*/
-                } else {
-                    console.log("private false");
-
-                    return true;
-                }
-            });
-            callback(null, onlyCollabs);
-            })
-            .catch((err) => {
-                callback(err);
-            })
-
-    },
-
-    getUserPremiumWikis(req, callback){
+    getUserPremiumWikis(user, callback){
 
         Wiki.findAll({
-            where: {[Op.or]: [{private: true, userId: req.user.id}, {[Op.not]:{private: true}}]}})
-        .then((wikis) => {
-            if(wikis){
-                callback(null, wikis)
-            }
-        })
-        .catch((err) => {
-            callback(err);
-        })
+            where: {[Op.or]: [{private: true, userId: user.id}, {[Op.not]:{private: true}}]}})
+            .then((wikis) => {
+                console.log("\n wikis got \n");
+                Collaborator.findAll({where: {userId: user.id}})
+                .then((collabs) => {
+                    console.log("\n collabs got \n");
+
+                    if(collabs){
+                  /* var wikiIds = collabs.map((collab) => {return collab.wikiId});
+                   console.log(`\n\n${wikiIds[0]}\n`);
+                   Wiki.findAll({where: {id: wikiIds}})
+                   .then((collabWikis) => {
+                       const refinedWikis = collabWikis.concat(wikis);
+                       callback(null, refinedWikis)
+
+                   })*/
+                   callback(null, wikis);
+                    }else{
+                        callback(null, wikis)
+                }
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+                callback(err);
+            })
     },
 
     getWiki( req, callback){

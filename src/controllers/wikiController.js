@@ -9,59 +9,44 @@ module.exports = {
     index(req, res, next){
         const admin = new Authorizer(req.user)._isAdmin();
         const premium = new Authorizer(req.user)._isPremium();
-       
+
         if(req.user){
-            User.findOne({include: {
-                model: Collaborator,
-                as: "collaborators",
-                through: { attributes: []}
-            }, 
-            where: {id: req.user.id}})
-            .then((user) => {
-            console.log(`\n${user.email}  ${user.isCollaborator()}\n`);
-            
-                if(user.isCollaborator()){
-                    wikiQueries.getCollabWikis(user, (err, wikis) => {
-                        if(err || !wikis){
-                            res.redirect(404, "/");
-                        } else {
-                            console.log("\n render collab index \n")
-                            res.render("wikis/index", {wikis});
-                        }
-                    })
-                } else {
-                    if(admin){
-                        wikiQueries.getAllWikis((err, wikis) => {
-                            if(err || !wikis){
-                                res.redirect(404, "/");
-                            }else{
-                                res.render("wikis/index", {wikis});
-                            }
-                        })
-                    } else if(premium){
-                        wikiQueries.getUserPremiumWikis(req, (err, wikis) => {
-                            if(err || !wikis){
-                                res.redirect(404, "/");
-                            }else{
-                                res.render("wikis/index", {wikis});
-                            }
-                        })
-                }
-                   
-            }
-            })
-            .catch((err) => {
-            console.log(err);
-            })
-    }else{
-        wikiQueries.getPublicWikis((err, wikis) => {
-            if(err || !wikis){
-                res.redirect(404, "/");
+            if(admin){
+                wikiQueries.getAllWikis((err, wikis) => {
+                    if(err || !wikis){
+                        res.redirect(404, "/");
+                    }else{
+                        res.render("wikis/index", {wikis});
+                    }
+                })
+            } else if(premium){
+                console.log("\n loading premium wikis");
+                wikiQueries.getUserPremiumWikis(req.user, (err, wikis) => {
+                    if(err || !wikis){
+                        res.redirect(404, "/");
+                    }else{
+                        res.render("wikis/index", {wikis});
+                    }
+                })
             }else{
-                res.render("wikis/index", {wikis});
+                wikiQueries.getPublicWikis(req.user, (err, wikis) => {
+                    if(err || !wikis){
+                        console.log(err);
+                        res.redirect(404, "/");
+                    }else{
+                        res.render("wikis/index", {wikis});
+                    }
+                })
             }
-        })
-    }
+        } else {
+            wikiQueries.getPublicWikis(null, (err, wikis) => {
+                if(err || !wikis){
+                    res.redirect(404, "/");
+                }else{
+                    res.render("wikis/index", {wikis});
+                }
+            })
+        }
     },
 
     new(req, res, next){

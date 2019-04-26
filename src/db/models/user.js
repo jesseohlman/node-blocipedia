@@ -17,9 +17,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "standard"
-    },
-    wikiId: {
-      type: DataTypes.INTEGER
     }
   }, {});
   User.associate = function(models) {
@@ -29,16 +26,22 @@ module.exports = (sequelize, DataTypes) => {
       as: "wikis"
     });
 
-    User.belongsToMany(models.Collaborator, {
-      through: "collabUsers",
+    User.hasMany(models.Collaborator, {
       foreignKey: "userId",
       as: "collaborators"
     });
+
 
     User.prototype.isCollaborator = function(){
       if(!this.collaborators) return false;
 
       return true;
+    };
+
+    User.prototype.getCollabsWikiIds = function(){
+      if(!this.collaborators) return [];
+
+      return this.collaborators.map((collab) => {return collab.wikiId});
     }
   };
   return User;
