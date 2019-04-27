@@ -66,14 +66,20 @@ module.exports = {
     },
 
     show(req, res, next){
+        var user = {id: 0};
 
         wikiQueries.getWiki(req, (err, wiki) => {
             if(!wiki || err){
                 res.redirect(404, "/");
             } else {
-                const body = helpers.markdownUpdate(wiki.body);
-                res.render("wikis/show", {wiki, body});
-
+                if(req.user){
+                    user = req.user;
+                }
+                Collaborator.findOne({where: {wikiId: req.params.id, userId: user.id}})
+                .then((collab) => {
+                    const body = helpers.markdownUpdate(wiki.body);
+                    res.render("wikis/show", {wiki, body, collab});
+                })
             }
         })
         

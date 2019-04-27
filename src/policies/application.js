@@ -1,13 +1,13 @@
-
 module.exports = class ApplicationPolicy {
 
-    constructor(user, record) {
+    constructor(user, record, collab) {
         this.user = user;
         this.record = record;
+        this.collab = collab;
     }
 
     _isOwner() {
-        return this.record && ((this.record.userId == this.user.id)   || Collaborator.checkUser(this.user.id));
+        return this.record && ((this.record.userId == this.user.id)   || (this.collab.userId == this.user.id));
     }
 
     _isAdmin() {
@@ -36,6 +36,6 @@ module.exports = class ApplicationPolicy {
     }
 
     destroy(){
-        return this.edit();
+        return this.edit() && (this.record.userId == this.user.id);
     }
 }

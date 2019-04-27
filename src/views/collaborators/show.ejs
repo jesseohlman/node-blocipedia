@@ -8,22 +8,28 @@
 
         <main class="container">
             <h1>Collaborators</h1>
-            <% if(currentUser.role === "admin" || (currentUser.role === "premium")) { %>
+            <% if(currentUser.role === "admin" || (currentUser.role === "premium" && wiki.userId === currentUser.id)) { %>
                 <div>
                     <div>Add collaborators by email</div>
-                    <form class="form-group" action="/wikis/<%= collab.wikiId %>/collaborators/new" method="post">
+                    <form class="form-group" action="/wikis/<%= wiki.id %>/collaborators/new" method="post">
                         <input type="email" name="email" class="form-control" placeholder="collaborator@email.com"/>
                         <button type="submit" class="btn btn-primary">Add Collaborator</button>
                     </form>
                 </div>
             <% } %>
             
-            <% if(collab) { %>
+            <% if(users.length >= 1) { %>
                 <ul>
-                    <% const users = collab.getUsers(); users.forEach((user) => { %>
+                    <% users.forEach((user) => { %>
                         <li>
                             <h3><%= user.name %></h3>
                             <small>email: <%= user.email %></small>
+                            <% if((currentUser.role === "admin" || (currentUser.role === "premium" && wiki.userId === currentUser.id))){ %>
+                                <form action="/wikis/<%= wiki.id %>/collaborators/destroy" method="post">
+                                    <input hidden name="id" value="<%= user.id %>"/>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            <% } %>
                         </li>
                     <% }) %>
                 </ul>

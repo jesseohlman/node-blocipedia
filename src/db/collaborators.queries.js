@@ -11,17 +11,12 @@ module.exports = {
         })
     },
 
-    findCollab(wikiId, callback){
+    findCollabs(wikiId, callback){
 
-        Collaborator.findOne({
-            include: {
-                model: User,
-                as: "users",
-                through: { attributes: []}
-            },
-            where: {wikiId: wikiId}})
-        .then((collab) => {
-            callback(null, collab);
+        Collaborator.findAll({where: {wikiId: wikiId}})
+        .then((collabs) => {
+
+            callback(null, collabs);
         })
         .catch((err) => {
             callback(err);
@@ -53,6 +48,16 @@ module.exports = {
                 req.flash("notice", "We could not find a user with that email.");
                 callback("No user found");
             }
+        })
+    },
+
+    deleteCollab(req, callback){
+        Collaborator.destroy({where: {wikiId: req.params.wikiId, userId: req.body.id}})
+        .then((collab) => {
+            callback(null, collab);
+        })
+        .catch((err) => {
+            callback(err);
         })
     }
 }

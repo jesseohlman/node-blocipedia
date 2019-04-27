@@ -116,19 +116,21 @@ module.exports = {
     },
 
     getWiki( req, callback){
-
         Wiki.findOne({
             where: {id: req.params.id}
         })
         .then((wiki) => {
             if(wiki.private){
-                const authorized = new Authorizer(req.user, wiki)._isPremium();
+                Collaborator.findOne({where: {userId: req.user.id}})
+                .then((collab) => {
+                const authorized = new Authorizer(req.user, wiki, collab)._isOwner();
                 if(authorized){
                     callback(null, wiki)
                 } else {
                     req.flash("notice", "You are not authorized to do that.");
                     callback("Forbidden");
                 }
+            })
             } else {
             callback(null, wiki)
             }
@@ -164,7 +166,9 @@ module.exports = {
         Wiki.findOne({
             where: {id: req.params.id}
         }).then((wiki) => {
-            const authorized = new Authorizer(req.user, wiki).update();
+            Collaborator.findOne({where: {userId: req.user.id}})
+            .then((collab) => {
+            const authorized = new Authorizer(req.user, wiki, collab).update();
 
             if(authorized){
                 wiki.update({
@@ -183,6 +187,7 @@ module.exports = {
                 callback("Forbidden");
             }
         })
+    })
     },
 
     
