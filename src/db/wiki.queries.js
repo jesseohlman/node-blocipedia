@@ -89,20 +89,9 @@ module.exports = {
         Wiki.findAll({
             where: {[Op.or]: [{private: true, userId: user.id}, {[Op.not]:{private: true}}]}})
             .then((wikis) => {
-                console.log("\n wikis got \n");
                 Collaborator.findAll({where: {userId: user.id}})
                 .then((collabs) => {
-                    console.log("\n collabs got \n");
-
                     if(collabs){
-                  /* var wikiIds = collabs.map((collab) => {return collab.wikiId});
-                   console.log(`\n\n${wikiIds[0]}\n`);
-                   Wiki.findAll({where: {id: wikiIds}})
-                   .then((collabWikis) => {
-                       const refinedWikis = collabWikis.concat(wikis);
-                       callback(null, refinedWikis)
-
-                   })*/
                    callback(null, wikis);
                     }else{
                         callback(null, wikis)
@@ -110,7 +99,6 @@ module.exports = {
                 })
             })
             .catch((err) => {
-                console.log(err);
                 callback(err);
             })
     },

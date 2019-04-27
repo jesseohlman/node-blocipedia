@@ -20,7 +20,6 @@ module.exports = {
                     }
                 })
             } else if(premium){
-                console.log("\n loading premium wikis");
                 wikiQueries.getUserPremiumWikis(req.user, (err, wikis) => {
                     if(err || !wikis){
                         res.redirect(404, "/");
@@ -31,7 +30,6 @@ module.exports = {
             }else{
                 wikiQueries.getPublicWikis(req.user, (err, wikis) => {
                     if(err || !wikis){
-                        console.log(err);
                         res.redirect(404, "/");
                     }else{
                         res.render("wikis/index", {wikis});
