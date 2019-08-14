@@ -52,8 +52,8 @@ module.exports = {
 
     signin(req, res, next){
 
-        passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/signin', failureFlash: true })(req, res);
-        /*passport.authenticate('local')(req, res, function(){
+        //passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/signin', failureFlash: true })(req, res);
+        passport.authenticate('local')(req, res, function(){
             if(req.user){
                 req.flash("notice", "You have successfully signed in!");
                 res.redirect("/");
@@ -61,7 +61,7 @@ module.exports = {
                 req.flash("notice", "You've failed to signed in, please try again.");
                 res.redirect(req.headers.referer);
             }
-        });*/
+        });
     },
 
     signout(req, res, next){
