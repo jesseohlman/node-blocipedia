@@ -17,6 +17,7 @@ module.exports = {
         app.use(logger('dev'));
         app.use(expressValidator());
         app.use(bodyParser.urlencoded({extended: true }));
+        app.use(express.json());
         app.set("views", viewsFolder);
         app.set("view engine", "ejs");
         app.use(express.static(path.join(__dirname, "..", "assets")));
