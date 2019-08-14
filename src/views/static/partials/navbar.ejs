@@ -1,8 +1,9 @@
-<div>navbar here
 
+<div>
     <div>
         <% if(!currentUser) { %>
-            <a class="btn btn-primary" href="/users/signin">Sign in</a>
+            <a class="nav-but btn btn-primary" href="/users/signin">Sign in</a>
+            <a class="nav-but btn btn-primary" href="/users/signup">Sign up</a>
         <% } else {%>
             <a class="btn btn-primary" href="/users/signout">Sign out</a>
         <% } %>

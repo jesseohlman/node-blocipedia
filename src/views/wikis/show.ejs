@@ -21,11 +21,19 @@
             <% } %>
 
             <% if(currentUser) { %>
-                <% if(currentUser.role === "admin" || (currentUser.id === wiki.userId) || (collab.userId === currentUser.id)){ %>
-                <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
-                <form action="/wikis/<%= wiki.id %>/destroy" method="post">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                <% if(currentUser.role === "admin" || (currentUser.id === wiki.userId)){ %>
+                    <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
+                    <form action="/wikis/<%= wiki.id %>/destroy" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                <% } %>
+                <% if(collab){ %>
+                    <% if(collab.userId === currentUser.id){ %>
+                        <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
+                        <form action="/wikis/<%= wiki.id %>/destroy" method="post">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    <% } %>
                 <% } %>
             <% } %>
         </main>

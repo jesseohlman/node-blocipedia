@@ -135,9 +135,4 @@ describe("routes : users", () => {
         });
     });
 
-    describe("POST /users/upgrade", () => {
-        it("should upgrade the current user to premium", () => {
-            
-        })
-    })
 })
