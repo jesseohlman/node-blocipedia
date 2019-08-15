@@ -1,18 +1,18 @@
 
 <div>
-    <div>
+    <div style="background-image: linear-gradient(white,#e6e6e6);border-bottom: black solid 1px">
         <% if(!currentUser) { %>
-            <a class="nav-but btn btn-primary" href="/users/signin">Sign in</a>
-            <a class="nav-but btn btn-primary" href="/users/signup">Sign up</a>
+            <a class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px" href="/users/signin">Sign in</a>
+            <a class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px" href="/users/signup">Sign up</a>
         <% } else {%>
-            <a class="btn btn-primary" href="/users/signout">Sign out</a>
+            <a class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px" href="/users/signout">Sign out</a>
         <% } %>
-        <a href="/wikis" class="btn btn-primary">Wikis</a>
+        <a href="/wikis" class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px">Wikis</a>
         <% if(currentUser) { %>
             <% if (currentUser.role !== "premium") { %>
-                <a href="/users/premium" class="btn btn-primary">Premium</a>
+                <a href="/users/premium" class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px">Premium</a>
             <% } else { %>
-                <a href="/users/member" class="btn btn-primary">Downgrade</a>
+                <a href="/users/member" class="btn btn-primary btn-lg" style="margin:10px 20px 10px 20px">Downgrade</a>
         <% } %>
     <% } %>
     </div>
