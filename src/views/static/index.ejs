@@ -24,8 +24,39 @@
                 </div>
             </div>
         </div>
-        
-
+        <!-- remove -->
+        <div>
+            <main class="container">
+                <h1>New Wiki</h1>
+                <form method="post" action="/wikis/create">
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input class="form-control" type="text" name="title" placeholder="Your title here"/>
+                        <small>title must be at least 3 characters long</small>
+                    </div>
+                    <div>
+                        <label for="body">Body:</label>
+                        <textarea class="form-control" rows="8" cols="75" name="body" placeholder="Your body text here"></textarea>
+                        <small>body must be at least 10 characters in length</small>
+                        <% include ./partials/markdownGuide.ejs %>
+            
+                    </div>
+            
+                        <label for="private">Make this wiki private?</label>
+                        <div class="popup" onClick="myFunction()">
+                            <input class="form-control" type="checkbox" name="private" value="true"/><br>
+                        </div>
+                    <button type="submit"  class="btn btn-primary">submit</button>
+                
+                </form>
+            </main>
+            </div>
+                <script>
+                    function myFunction() {
+                        confirm("Are you sure you want to make this wiki private? \nOnly you, and those you specify, may view it.");
+                    }
+                </script>
+                <!-- remove -->
       </main>
 
      <% include ./partials/baseScripts.ejs %>
